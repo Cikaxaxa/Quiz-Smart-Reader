@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <style>
+         * {
+         box-sizing: border-box;
+         }
+
+         .column {
+      float: left;
+      width: 16.6%;
+       height: 150px; 
+      }
+
+       .row:after {
+      content: "";
+      display: table;
+      clear: both;
+      }
+      </style>
+      
+      <title>Map Quiz</title>
+      
+      <link rel = "stylesheet" href = "http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
+      <script src = "http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+      
+   </head>
+  
+   <body>
+      <p>
+      <div id = "map" style = "width: 100%; height:580px;"></div>
+      
+      <div style="background: blue;">
+         <div class="row">
+            <div class="column" style="background-color:blue;">
+              <h2>Time:</h2>
+              <p  id="stamp" ></p>
+            </div>
+            <div class="column" style="background-color:blue;">
+              <h2>Latitude:</h2>
+              <p  id="lat" ></p>
+            </div>
+            <div class="column" style="background-color:blue;">
+              <h2>Longitude:</h2>
+              <p  id="lng" ></p>
+            </div>
+            <div class="column" style="background-color:blue;">
+              <h2>Speed:</h2>
+              <p  id="velo" ></p>
+            </div>
+            <div class="column" style="background-color:blue;">
+               <h2>Altitude:</h2>
+               <p  id="alt" ></p>
+             </div>
+             <div class="column" style="background-color:blue;">
+               <h2>Visibility:</h2>
+               <p  id="viso" ></p>
+             </div>
+          </div>
+     
+      </div>
+     
+      </p>
+
+  
+  
+   <script>
+   var test = "";
+   var lat = "";
+   var lng = "";
+   var stamp = "";
+   var speed = "";
+   var alt = "";
+   var viso = "";
+  
+  
+ 
+
+$.ajax({
+    url: "https://api.wheretheiss.at/v1/satellites/25544",
+   
+    dataType: "text",
+    success: function(data) {
+
+    var json = $.parseJSON(data);
+    test = json; 
+    console.log(test);
+    lat = json.latitude;
+    lng = json.longitude;
+    //stamp = json.timestamp;
+    velo = json.velocity;
+    alt = json.altitude;
+    viso = json.visibility;
+    stamp = new Date(json.timestamp);
+    
+    var mapOptions = {
+    center: [lat, lng],
+    zoom: 3
+    }
+
+    var map = new L.map('map', mapOptions);
+    
+
+    var layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+    
+
+    map.addLayer(layer);
+    
+
+    var marker = L.marker([lat, lng]);
+    
+
+    marker.addTo(map);
+
+
+      dateFormat = stamp.getHours() + ":" + stamp.getMinutes() + ", "+ stamp.toDateString();
+    
+    document.getElementById('lat').innerHTML = lat;
+    document.getElementById('lng').innerHTML = lng;
+    document.getElementById('velo').innerHTML = velo;
+    document.getElementById('alt').innerHTML = alt;
+    document.getElementById('viso').innerHTML = viso;
+    document.getElementById('stamp').innerHTML = stamp;
+
+
+  
+    }
+
+});     
+      </script>
+   
+   
+      
+
+   </body>  
+
+   
+</html>
